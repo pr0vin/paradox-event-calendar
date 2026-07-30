@@ -1,0 +1,23 @@
+{
+  "name": "paradox/event-calendar",
+  "description": "A customizable Laravel event calendar package.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Paradox\\EventCalendar\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Paradox\\EventCalendar\\EventCalendarServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
