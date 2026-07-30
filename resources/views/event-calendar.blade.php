@@ -1,5 +1,5 @@
-<div class="pec-calendar">
+<h2>{{ $calendar['monthName'] }} {{ $calendar['year'] }}</h2>
 
-    <h2>Paradox Event Calendar</h2>
+<p>Days : {{ $calendar['daysInMonth'] }}</p>
 
-</div>
+<p>Starts On : {{ $calendar['startDay'] }}</p>

@@ -3,11 +3,16 @@
 namespace Paradox\EventCalendar\Components;
 
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
 
 class EventCalendar extends Component
 {
     public function render()
     {
-        return view('event-calendar::event-calendar');
+        $calendar = app(\Paradox\EventCalendar\Services\CalendarService::class);
+
+        return view('event-calendar::event-calendar', [
+            'calendar' => $calendar->month()
+        ]);
     }
 }
