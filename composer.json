@@ -7,7 +7,9 @@
     "laravel",
     "calendar",
     "events",
-    "blade"
+    "blade",
+    "nepali-calendar",
+    "bikram-sambat"
   ],
   "authors": [
     {
@@ -19,7 +21,8 @@
     "php": "^8.2",
     "illuminate/support": "^11.0|^12.0",
     "illuminate/view": "^11.0|^12.0",
-    "nesbot/carbon": "^3.13"
+    "nesbot/carbon": "^3.13",
+    "paradox/nepali-date": "*"
   },
   "autoload": {
     "psr-4": {
