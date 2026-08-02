@@ -22,7 +22,7 @@
     "illuminate/support": "^11.0|^12.0",
     "illuminate/view": "^11.0|^12.0",
     "nesbot/carbon": "^3.13",
-    "paradox/nepali-date": "*"
+    "paradox/nepali-date": "@dev"
   },
   "autoload": {
     "psr-4": {

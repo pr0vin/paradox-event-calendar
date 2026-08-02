@@ -3,18 +3,14 @@
 namespace Paradox\EventCalendar;
 
 use Illuminate\Support\ServiceProvider;
-use Paradox\EventCalendar\Services\CalendarBuilder;
+use Illuminate\Support\Facades\Blade;
+use Paradox\EventCalendar\Components\EventCalendar;
 
 class EventCalendarServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(
-            CalendarBuilder::class,
-            function () {
-                return new CalendarBuilder();
-            }
-        );
+        //
     }
 
 
@@ -25,11 +21,10 @@ class EventCalendarServiceProvider extends ServiceProvider
             'event-calendar'
         );
 
-        $this->loadViewComponentsAs(
+
+        Blade::component(
             'event-calendar',
-            [
-                \Paradox\EventCalendar\Components\EventCalendar::class
-            ]
+            EventCalendar::class
         );
     }
 }

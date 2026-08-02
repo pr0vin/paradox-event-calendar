@@ -6,11 +6,16 @@ use Carbon\Carbon;
 
 class CalendarService
 {
-    public function month(int $year = null, int $month = null): array
-    {
+    public function month(
+        ?int $year = null,
+        ?int $month = null
+    ): array {
+
+        $today = Carbon::now();
+
         $date = Carbon::create(
-            $year ?? now()->year,
-            $month ?? now()->month,
+            $year ?? $today->year,
+            $month ?? $today->month,
             1
         );
 

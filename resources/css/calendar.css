@@ -1,0 +1,65 @@
+.nepali-calendar {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th {
+  background: #f3f4f6;
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.calendar-table td {
+  height: 100px;
+  border: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.calendar-day {
+  height: 100%;
+  padding: 10px;
+  position: relative;
+}
+
+.day-number {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.calendar-day.today {
+  background: #2563eb;
+  color: white;
+
+  border-radius: 8px;
+}
+
+.events {
+  margin-top: 10px;
+}
+
+.event {
+  background: #16a34a;
+  color: white;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 3px;
+}
