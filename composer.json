@@ -1,20 +1,12 @@
 {
   "name": "paradox/event-calendar",
-  "description": "A customizable Laravel event calendar package.",
-  "type": "library",
-  "license": "MIT",
-  "keywords": [
-    "laravel",
-    "calendar",
-    "events",
-    "blade",
-    "nepali-calendar",
-    "bikram-sambat"
-  ],
-  "authors": [
+  "repositories": [
     {
-      "name": "Pravin Chaudhary",
-      "email": "pravinchaudhary688@gmail.com"
+      "type": "path",
+      "url": "../paradox-nepali-date",
+      "options": {
+        "symlink": true
+      }
     }
   ],
   "require": {

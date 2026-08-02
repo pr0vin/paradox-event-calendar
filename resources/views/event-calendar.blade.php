@@ -2,10 +2,30 @@
 
     <div class="calendar-header">
 
-        <button class="calendar-btn">
-            ‹ Previous
-        </button>
+        @php
 
+            $previousMonth = $calendar->month - 1;
+            $previousYear = $calendar->year;
+
+            if ($previousMonth == 0) {
+                $previousMonth = 12;
+                $previousYear--;
+            }
+
+            $nextMonth = $calendar->month + 1;
+            $nextYear = $calendar->year;
+
+            if ($nextMonth == 13) {
+                $nextMonth = 1;
+                $nextYear++;
+            }
+
+        @endphp
+
+
+        <a class="calendar-btn" href="?year={{ $previousYear }}&month={{ $previousMonth }}">
+            ‹ Previous
+        </a>
 
         <h2>
             {{ nepali_month($calendar->month) }}
@@ -13,9 +33,9 @@
         </h2>
 
 
-        <button class="calendar-btn">
+        <a class="calendar-btn" href="?year={{ $nextYear }}&month={{ $nextMonth }}">
             Next ›
-        </button>
+        </a>
 
     </div>
 
@@ -119,24 +139,23 @@
     .calendar-btn {
 
         background: #2563eb;
-        color: white;
 
-        border: none;
+        color: white;
 
         padding: 8px 18px;
 
         border-radius: 6px;
 
-        font-size: 15px;
+        text-decoration: none;
 
-        cursor: pointer;
+        font-size: 15px;
 
     }
 
 
     .calendar-btn:hover {
 
-        opacity: 0.85;
+        opacity: .8;
 
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a21310f06aea11fd1c97fb2479be710",
+    "content-hash": "10c98d428ff0e971d71114ad758bc3a1",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -943,6 +943,44 @@
                 }
             ],
             "time": "2026-07-09T18:23:49+00:00"
+        },
+        {
+            "name": "paradox/nepali-date",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../paradox-nepali-date",
+                "reference": "70b03c1c753488dcc0e0b91f8423076243c3fd80"
+            },
+            "require": {
+                "illuminate/support": "^11.0|^12.0",
+                "nesbot/carbon": "^3.0",
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Paradox\\NepaliDate\\NepaliDateServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Paradox\\NepaliDate\\": "src/"
+                },
+                "files": [
+                    "src/Helpers/helpers.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel package for Bikram Sambat (BS) and Gregorian (AD) date conversion.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "psr/clock",
@@ -1898,7 +1936,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "paradox/nepali-date": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

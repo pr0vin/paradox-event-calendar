@@ -36,7 +36,7 @@ class CalendarBuilder
         ];
 
 
-        // Days in current BS month
+        // Total days in month
         $monthDays = $this->nepaliDate->daysInMonth(
             $year,
             $month
@@ -44,50 +44,61 @@ class CalendarBuilder
 
 
         /*
-         * Find first day weekday
-         * BS date -> AD -> Carbon weekday
-         */
-        $firstDayAd = $this->nepaliDate
-            ->bsToAd(
-                $year,
-                $month,
-                1
-            );
+        |--------------------------------------------------------------------------
+        | First day weekday
+        |--------------------------------------------------------------------------
+        */
+
+        $firstDay = $this->nepaliDate->create(
+            $year,
+            $month,
+            1
+        );
 
 
-        // Sunday = 0, Monday = 1 ...
-        $startDay = $firstDayAd->dayOfWeek;
+        // 0 Sunday - 6 Saturday
+        $startDay = $firstDay->dayOfWeek();
+
 
 
         /*
-         * Add empty cells before month starts
-         */
+        |--------------------------------------------------------------------------
+        | Empty cells before month start
+        |--------------------------------------------------------------------------
+        */
+
         for ($i = 0; $i < $startDay; $i++) {
 
             $days[] = new CalendarDay(
+                year: null,
+                month: null,
                 day: null,
-                currentMonth: false
+                today: false,
+                currentMonth: false,
+                weekDay: $i,
+                events: []
             );
         }
 
 
-        /*
-         * Add month days
-         */
-        for ($day = 1; $day <= $monthDays; $day++) {
 
-            $adDate = $this->nepaliDate->bsToAd(
-                $year,
-                $month,
-                $day
-            );
+        /*
+        |--------------------------------------------------------------------------
+        | Month days
+        |--------------------------------------------------------------------------
+        */
+
+        for ($day = 1; $day <= $monthDays; $day++) {
 
 
             $days[] = new CalendarDay(
 
                 year: $year,
+
                 month: $month,
+
                 day: $day,
+
 
                 today: (
                     $today->year() === $year &&
@@ -95,14 +106,35 @@ class CalendarBuilder
                     $today->day() === $day
                 ),
 
+
                 currentMonth: true,
 
-                // Sunday = 0, Saturday = 6
-                weekDay: $adDate->dayOfWeek,
+
+                // calculate from position
+                weekDay: ($startDay + $day - 1) % 7,
+
 
                 events: []
             );
         }
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Complete final row
+        |--------------------------------------------------------------------------
+        */
+
+        while (count($days) % 7 !== 0) {
+
+            $days[] = new CalendarDay(
+                day: null,
+                currentMonth: false,
+                events: []
+            );
+        }
+
 
 
         return new Calendar(

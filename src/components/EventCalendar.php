@@ -22,17 +22,20 @@ class EventCalendar extends Component
 
         $today = $this->nepaliDate->today();
 
-        $this->year = $year ?? $today->year();
-        $this->month = $month ?? $today->month();
+        $this->year = $year ?? request('year', $today->year());
+
+        $this->month = $month ?? request('month', $today->month());
     }
 
 
     public function render(): View
     {
+
         $calendar = $this->builder->build(
             $this->year,
             $this->month
         );
+
 
         return view(
             'event-calendar::event-calendar',
