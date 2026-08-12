@@ -2,28 +2,69 @@
 
 namespace Paradox\EventCalendar\Objects;
 
+
 class Calendar
 {
-    public int $year;
-
-    public int $month;
-
-    /**
-     * @var CalendarDay[]
-     */
-    public array $days = [];
-
-    public array $weekdays = [];
 
     public function __construct(
-        int $year,
-        int $month,
-        array $days,
-        array $weekdays
-    ) {
-        $this->year = $year;
-        $this->month = $month;
-        $this->days = $days;
-        $this->weekdays = $weekdays;
+
+        public int $year,
+
+        public int $month,
+
+        public string $monthName,
+
+        public array $days,
+
+        public array $weekdays
+
+    ) {}
+
+
+    public function weeks(): array
+    {
+        return array_chunk(
+            $this->days,
+            7
+        );
+    }
+
+
+    public function previousMonth(): array
+    {
+
+        if ($this->month === 1) {
+
+            return [
+                'year' => $this->year - 1,
+                'month' => 12
+            ];
+        }
+
+
+        return [
+            'year' => $this->year,
+            'month' => $this->month - 1
+        ];
+    }
+
+
+
+    public function nextMonth(): array
+    {
+
+        if ($this->month === 12) {
+
+            return [
+                'year' => $this->year + 1,
+                'month' => 1
+            ];
+        }
+
+
+        return [
+            'year' => $this->year,
+            'month' => $this->month + 1
+        ];
     }
 }

@@ -4,24 +4,34 @@ namespace Paradox\EventCalendar\Objects;
 
 class CalendarDay
 {
-
     public function __construct(
+
         public ?int $year = null,
+
         public ?int $month = null,
+
         public ?int $day = null,
+
         public bool $today = false,
+
         public bool $currentMonth = true,
-        public int $weekDay = 0,
+
+        public ?int $weekDay = null,
+
         public array $events = []
+
     ) {}
 
 
-    /**
-     * Return formatted BS date.
-     */
+    public function isEmpty(): bool
+    {
+        return $this->day === null;
+    }
+
+
     public function date(): ?string
     {
-        if ($this->year === null || $this->month === null || $this->day === null) {
+        if ($this->isEmpty()) {
             return null;
         }
 
@@ -31,13 +41,5 @@ class CalendarDay
             $this->month,
             $this->day
         );
-    }
-
-    /**
-     * Check whether this day has events.
-     */
-    public function hasEvents(): bool
-    {
-        return count($this->events) > 0;
     }
 }

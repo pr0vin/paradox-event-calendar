@@ -950,7 +950,7 @@
             "dist": {
                 "type": "path",
                 "url": "../paradox-nepali-date",
-                "reference": "70b03c1c753488dcc0e0b91f8423076243c3fd80"
+                "reference": "c2c15ea32f220188e058994a01c2b45ffb8f2464"
             },
             "require": {
                 "illuminate/support": "^11.0|^12.0",
