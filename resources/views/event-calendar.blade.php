@@ -1,7 +1,7 @@
 <div class="calendar-wrapper" id="event-calendar" data-event-url="{{ $eventUrl }}">
 
     {{-- ============================================================
-         Calendar Section
+         Calendar
     ============================================================= --}}
 
     <div class="calendar-container">
@@ -42,12 +42,14 @@
 
 
             {{-- Previous --}}
-            <a class="calendar-btn" href="?year={{ $previousYear }}&month={{ $previousMonth }}">
+
+            <a class="calendar-btn" href="{{ request()->url() }}?year={{ $previousYear }}&month={{ $previousMonth }}">
                 ‹ Previous
             </a>
 
 
             {{-- Current Month --}}
+
             <h2>
                 {{ nepali_month($calendar->month) }}
                 {{ $calendar->year }}
@@ -55,7 +57,8 @@
 
 
             {{-- Next --}}
-            <a class="calendar-btn" href="?year={{ $nextYear }}&month={{ $nextMonth }}">
+
+            <a class="calendar-btn" href="{{ request()->url() }}?year={{ $nextYear }}&month={{ $nextMonth }}">
                 Next ›
             </a>
 
@@ -98,12 +101,14 @@
                                         data-date="{{ sprintf('%04d-%02d-%02d', $day->year, $day->month, $day->day) }}">
 
                                         {{-- Day Number --}}
+
                                         <span class="day-number">
                                             {{ $day->day }}
                                         </span>
 
 
-                                        {{-- Event Count Badge --}}
+                                        {{-- Event Count --}}
+
                                         <div class="day-event-count"></div>
 
                                     </div>
@@ -153,7 +158,7 @@
 <style>
     /*
     |--------------------------------------------------------------------------
-    | Calendar Wrapper
+    | Wrapper
     |--------------------------------------------------------------------------
     */
 
@@ -166,7 +171,7 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Calendar Container
+    | Calendar
     |--------------------------------------------------------------------------
     */
 
@@ -177,7 +182,7 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Calendar Header
+    | Header
     |--------------------------------------------------------------------------
     */
 
@@ -198,15 +203,18 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Navigation Buttons
+    | Buttons
     |--------------------------------------------------------------------------
     */
 
     .calendar-btn {
         background: #2563eb;
         color: white;
+
         padding: 8px 18px;
+
         border-radius: 6px;
+
         text-decoration: none;
     }
 
@@ -220,7 +228,7 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Calendar Table
+    | Table
     |--------------------------------------------------------------------------
     */
 
@@ -232,31 +240,41 @@
 
     .calendar-table th {
         background: #f1f5f9;
+
         padding: 14px;
+
         text-align: center;
     }
 
 
     .calendar-table td {
         height: 100px;
+
         border: 1px solid #ddd;
+
         text-align: center;
+
         vertical-align: top;
+
         padding: 0;
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Calendar Day
+    | Day
     |--------------------------------------------------------------------------
     */
 
     .calendar-day {
         min-height: 100px;
+
         height: 100%;
+
         position: relative;
+
         padding: 10px;
+
         box-sizing: border-box;
     }
 
@@ -269,13 +287,17 @@
 
     .day-number {
         font-size: 26px;
+
         font-weight: 600;
 
         display: flex;
+
         align-items: center;
+
         justify-content: center;
 
         width: 40px;
+
         height: 40px;
 
         margin: 0 auto;
@@ -290,13 +312,17 @@
 
     .today .day-number {
         background: #2563eb;
+
         color: white;
 
         width: 45px;
+
         height: 45px;
 
         display: flex;
+
         align-items: center;
+
         justify-content: center;
 
         border-radius: 50%;
@@ -320,9 +346,7 @@
     |--------------------------------------------------------------------------
     |
     | Hidden by default.
-    |
-    | JavaScript will change this to inline-flex only when
-    | the date actually has one or more events.
+    | JavaScript shows it only when the date has events.
     |
     */
 
@@ -330,9 +354,11 @@
         display: none;
 
         align-items: center;
+
         justify-content: center;
 
         min-width: 22px;
+
         height: 22px;
 
         padding: 0 7px;
@@ -340,9 +366,11 @@
         margin: 5px auto 0;
 
         background: #16a34a;
+
         color: white;
 
         font-size: 11px;
+
         font-weight: 600;
 
         border-radius: 12px;
@@ -353,7 +381,7 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Event Sidebar
+    | Sidebar
     |--------------------------------------------------------------------------
     */
 
@@ -372,6 +400,7 @@
 
     .event-sidebar h3 {
         margin-top: 0;
+
         margin-bottom: 15px;
 
         font-size: 22px;
@@ -401,12 +430,14 @@
 
     .event-title {
         font-weight: 600;
+
         margin-bottom: 4px;
     }
 
 
     .event-date {
         font-size: 13px;
+
         color: #64748b;
     }
 
@@ -419,6 +450,7 @@
 
     .event-loading {
         color: #64748b;
+
         font-size: 14px;
     }
 
@@ -431,6 +463,7 @@
 
     .no-events {
         color: #64748b;
+
         font-size: 14px;
     }
 
@@ -443,6 +476,7 @@
 
     .event-error {
         color: #dc2626;
+
         font-size: 14px;
     }
 
@@ -477,12 +511,14 @@
 
         .calendar-btn {
             padding: 6px 10px;
+
             font-size: 13px;
         }
 
 
         .calendar-table th {
             padding: 8px 4px;
+
             font-size: 13px;
         }
 
@@ -494,6 +530,7 @@
 
         .calendar-day {
             min-height: 70px;
+
             padding: 5px;
         }
 
@@ -502,18 +539,21 @@
             font-size: 18px;
 
             width: 30px;
+
             height: 30px;
         }
 
 
         .today .day-number {
             width: 32px;
+
             height: 32px;
         }
 
 
         .day-event-count {
             min-width: 20px;
+
             height: 20px;
 
             font-size: 10px;
@@ -557,9 +597,6 @@
             calendar.dataset.eventUrl;
 
 
-        console.log('Event URL:', eventUrl);
-
-
         if (!eventUrl) {
 
             console.error(
@@ -568,6 +605,68 @@
 
             return;
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current Calendar Year / Month
+        |--------------------------------------------------------------------------
+        |
+        | These values come from CalendarBuilder.
+        |
+        | If there is no ?year or ?month in the URL,
+        | EventCalendar already uses the current Nepali date.
+        |
+        */
+
+        const calendarYear =
+            {{ $calendar->year }};
+
+        const calendarMonth =
+            {{ $calendar->month }};
+
+
+        console.log(
+            'Calendar:',
+            calendarYear,
+            calendarMonth
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Build API URL
+        |--------------------------------------------------------------------------
+        |
+        | Example:
+        |
+        | /calendar/events?year=2083&month=5
+        |
+        */
+
+        const eventRequestUrl =
+            new URL(
+                eventUrl,
+                window.location.origin
+            );
+
+
+        eventRequestUrl.searchParams.set(
+            'year',
+            calendarYear
+        );
+
+
+        eventRequestUrl.searchParams.set(
+            'month',
+            calendarMonth
+        );
+
+
+        console.log(
+            'Fetching events:',
+            eventRequestUrl.toString()
+        );
 
 
         /*
@@ -586,15 +685,15 @@
         |--------------------------------------------------------------------------
         */
 
-        fetch(eventUrl, {
+        fetch(
+                eventRequestUrl.toString(), {
+                    method: 'GET',
 
-                method: 'GET',
-
-                headers: {
-                    'Accept': 'application/json'
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 }
-
-            })
+            )
 
             .then(function(response) {
 
@@ -612,7 +711,10 @@
 
             .then(function(events) {
 
-                console.log('Events:', events);
+                console.log(
+                    'Events:',
+                    events
+                );
 
 
                 /*
@@ -670,7 +772,7 @@
 
                 /*
                 |--------------------------------------------------------------------------
-                | Display Events in Sidebar
+                | Sidebar Events
                 |--------------------------------------------------------------------------
                 */
 
@@ -684,12 +786,6 @@
                         'event-card';
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Event Title
-                    |--------------------------------------------------------------------------
-                    */
-
                     const title =
                         document.createElement('div');
 
@@ -701,12 +797,6 @@
                     title.textContent =
                         event.title ?? 'Untitled Event';
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Event Date
-                    |--------------------------------------------------------------------------
-                    */
 
                     const date =
                         document.createElement('div');
@@ -720,22 +810,10 @@
                         event.date ?? '';
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Add To Card
-                    |--------------------------------------------------------------------------
-                    */
-
                     card.appendChild(title);
 
                     card.appendChild(date);
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Add Card To Sidebar
-                    |--------------------------------------------------------------------------
-                    */
 
                     eventList.appendChild(card);
 
@@ -749,7 +827,13 @@
                 |
                 | Example:
                 |
-                | 2083-04-15 => [event1, event2, event3]
+                | 2083-05-15
+                |
+                | [
+                |     event 1,
+                |     event 2,
+                |     event 3
+                | ]
                 |
                 */
 
@@ -758,22 +842,10 @@
 
                 events.forEach(function(event) {
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Ignore Events Without Date
-                    |--------------------------------------------------------------------------
-                    */
-
                     if (!event.date) {
                         return;
                     }
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Create Date Group
-                    |--------------------------------------------------------------------------
-                    */
 
                     if (!eventsByDate[event.date]) {
 
@@ -782,12 +854,6 @@
                     }
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Add Event To Date
-                    |--------------------------------------------------------------------------
-                    */
-
                     eventsByDate[event.date].push(event);
 
                 });
@@ -795,7 +861,7 @@
 
                 /*
                 |--------------------------------------------------------------------------
-                | Display Event Count On Calendar
+                | Show Event Count On Calendar
                 |--------------------------------------------------------------------------
                 */
 
@@ -817,7 +883,7 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | Date Not In Current Month
+                    | Event Date Not In Current Calendar
                     |--------------------------------------------------------------------------
                     */
 
@@ -828,7 +894,7 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | Count Events
+                    | Number Of Events
                     |--------------------------------------------------------------------------
                     */
 
@@ -838,7 +904,7 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | Don't Show Empty Badge
+                    | No Events
                     |--------------------------------------------------------------------------
                     */
 
@@ -849,7 +915,7 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | Find Badge
+                    | Badge
                     |--------------------------------------------------------------------------
                     */
 
@@ -866,17 +932,14 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | Set Count
+                    | Badge Text
                     |--------------------------------------------------------------------------
                     */
 
                     countElement.textContent =
-                        eventCount +
-                        (
-                            eventCount === 1 ?
-                            ' event' :
-                            ' events'
-                        );
+                        eventCount === 1 ?
+                        '1 event' :
+                        eventCount + ' events';
 
 
                     /*
