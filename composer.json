@@ -18,9 +18,9 @@
   ],
   "require": {
     "php": "^8.2",
-    "illuminate/support": "^11.0|^12.0",
-    "illuminate/view": "^11.0|^12.0",
-    "nesbot/carbon": "^3.13",
+    "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+    "illuminate/view": "^9.0|^10.0|^11.0|^12.0",
+    "nesbot/carbon": "^2.62|^3.0",
     "parad0x/nepali-date": "^1.0"
   },
   "autoload": {

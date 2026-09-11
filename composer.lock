@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97c8518ea1d8f02a369825599b3a43e8",
+    "content-hash": "323529b92d0670b1ef78c456f352b69d",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -951,21 +951,21 @@
         },
         {
             "name": "parad0x/nepali-date",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pr0vin/paradox-nepali-date.git",
-                "reference": "484aa27001c8eb719c6c500756cf0faca3239d77"
+                "reference": "c3b7bad8ef1f8bd180a5c30ed4656db80cc09421"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pr0vin/paradox-nepali-date/zipball/484aa27001c8eb719c6c500756cf0faca3239d77",
-                "reference": "484aa27001c8eb719c6c500756cf0faca3239d77",
+                "url": "https://api.github.com/repos/pr0vin/paradox-nepali-date/zipball/c3b7bad8ef1f8bd180a5c30ed4656db80cc09421",
+                "reference": "c3b7bad8ef1f8bd180a5c30ed4656db80cc09421",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^11.0 || ^12.0",
-                "nesbot/carbon": "^3.0",
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+                "nesbot/carbon": "^2.62|^3.0",
                 "php": "^8.2"
             },
             "require-dev": {
@@ -995,9 +995,9 @@
             "description": "A Laravel package for converting and formatting Bikram Sambat (BS) and Gregorian (AD) dates.",
             "support": {
                 "issues": "https://github.com/pr0vin/paradox-nepali-date/issues",
-                "source": "https://github.com/pr0vin/paradox-nepali-date/tree/v1.0.0"
+                "source": "https://github.com/pr0vin/paradox-nepali-date/tree/v1.0.1"
             },
-            "time": "2026-09-11T06:09:53+00:00"
+            "time": "2026-09-11T09:30:18+00:00"
         },
         {
             "name": "psr/clock",
