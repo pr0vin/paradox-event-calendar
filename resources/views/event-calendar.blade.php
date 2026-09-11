@@ -50,10 +50,17 @@
 
             {{-- Current Month --}}
 
-            <h2>
-                {{ nepali_month($calendar->month) }}
-                {{ $calendar->year }}
-            </h2>
+            <div class="calendar-selector"> <select id="calendar-year" class="calendar-select">
+                    @for ($year = $calendar->year - 10; $year <= $calendar->year + 10; $year++)
+                        <option value="{{ $year }}" {{ $year == $calendar->year ? 'selected' : '' }}>
+                            {{ $year }} </option>
+                    @endfor
+                </select> <select id="calendar-month" class="calendar-select">
+                    @for ($month = 1; $month <= 12; $month++)
+                        <option value="{{ $month }}" {{ $month == $calendar->month ? 'selected' : '' }}>
+                            {{ nepali_month($month) }} </option>
+                    @endfor
+                </select> </div>
 
 
             {{-- Next --}}
@@ -480,6 +487,90 @@
         font-size: 14px;
     }
 
+    .calendar-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        background-color: #ffffff;
+
+        /* border: 1px solid #d1d5db; */
+        border: none;
+        border-radius: 6px;
+
+        padding: 9px 38px 9px 12px;
+
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+
+        color: #1f2937;
+
+        cursor: pointer;
+        outline: none;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 14px;
+    }
+
+    .calendar-select:hover {
+        border-color: #2563eb;
+        background-color: #f8fafc;
+    }
+
+    .calendar-select:focus {
+        border-color: #2563eb;
+
+        box-shadow:
+            0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    /* Year */
+    #calendar-year {
+        min-width: 95px;
+    }
+
+    /* Month */
+    #calendar-month {
+        min-width: 145px;
+    }
+
+
+    /* ============================================================
+   Mobile
+   ============================================================ */
+
+    @media (max-width: 768px) {
+
+        .calendar-selector {
+            gap: 5px;
+        }
+
+        .calendar-select {
+            padding: 7px 30px 7px 9px;
+            font-size: 14px;
+            line-height: 1.4;
+
+            background-position: right 8px center;
+        }
+
+        #calendar-year {
+            min-width: 75px;
+        }
+
+        #calendar-month {
+            min-width: 115px;
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -571,6 +662,39 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        const yearSelect = document.getElementById('calendar-year');
+        const monthSelect = document.getElementById('calendar-month');
+
+        if (yearSelect && monthSelect) {
+
+            function changeCalendar() {
+
+                const year = yearSelect.value;
+                const month = monthSelect.value;
+
+                const url = new URL(
+                    window.location.href
+                );
+
+                url.searchParams.set('year', year);
+                url.searchParams.set('month', month);
+
+                window.location.href = url.toString();
+            }
+
+            yearSelect.addEventListener(
+                'change',
+                changeCalendar
+            );
+
+            monthSelect.addEventListener(
+                'change',
+                changeCalendar
+            );
+        }
+
+
 
         /*
         |--------------------------------------------------------------------------

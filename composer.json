@@ -1,12 +1,19 @@
 {
   "name": "paradox/event-calendar",
-  "repositories": [
+  "description": "A Laravel event calendar component with Nepali date support.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "event-calendar",
+    "calendar",
+    "nepali-date",
+    "nepali-calendar",
+    "bs-date"
+  ],
+  "authors": [
     {
-      "type": "path",
-      "url": "../paradox-nepali-date",
-      "options": {
-        "symlink": true
-      }
+      "name": "Prabin Chaudhary"
     }
   ],
   "require": {
@@ -14,7 +21,7 @@
     "illuminate/support": "^11.0|^12.0",
     "illuminate/view": "^11.0|^12.0",
     "nesbot/carbon": "^3.13",
-    "paradox/nepali-date": "@dev"
+    "paradox/nepali-date": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -28,6 +35,6 @@
       ]
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true
 }
