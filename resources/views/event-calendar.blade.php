@@ -44,7 +44,7 @@
             {{-- Previous --}}
 
             <a class="calendar-btn" href="{{ request()->url() }}?year={{ $previousYear }}&month={{ $previousMonth }}">
-                ‹ Previous
+                ‹
             </a>
 
 
@@ -53,7 +53,7 @@
             <div class="calendar-selector"> <select id="calendar-year" class="calendar-select">
                     @for ($year = $calendar->year - 10; $year <= $calendar->year + 10; $year++)
                         <option value="{{ $year }}" {{ $year == $calendar->year ? 'selected' : '' }}>
-                            {{ $year }} </option>
+                            {{ toNepaliNumber($year) }} </option>
                     @endfor
                 </select> <select id="calendar-month" class="calendar-select">
                     @for ($month = 1; $month <= 12; $month++)
@@ -66,7 +66,7 @@
             {{-- Next --}}
 
             <a class="calendar-btn" href="{{ request()->url() }}?year={{ $nextYear }}&month={{ $nextMonth }}">
-                Next ›
+                ›
             </a>
 
         </div>
@@ -110,7 +110,7 @@
                                         {{-- Day Number --}}
 
                                         <span class="day-number">
-                                            {{ $day->day }}
+                                            {{ toNepaliNumber($day->day) }}
                                         </span>
 
 
@@ -141,7 +141,7 @@
     <div class="event-sidebar">
 
         <h3>
-            Events
+            कार्यक्रमहरु
         </h3>
 
 
@@ -183,7 +183,7 @@
     */
 
     .calendar-container {
-        width: 80%;
+        width: 70%;
     }
 
 
@@ -393,7 +393,7 @@
     */
 
     .event-sidebar {
-        width: 20%;
+        width: 30%;
 
         background: #f8fafc;
 
