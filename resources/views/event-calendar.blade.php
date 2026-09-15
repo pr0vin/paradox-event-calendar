@@ -667,21 +667,51 @@
         const yearSelect = document.getElementById('calendar-year');
         const monthSelect = document.getElementById('calendar-month');
 
-        if (yearSelect && monthSelect) {
+        /*
+        |--------------------------------------------------------------------------
+        | Change Year / Month
+        |--------------------------------------------------------------------------
+        |
+        | Always remove day when changing month or year.
+        |
+        */
 
-            function changeCalendar() {
-                const year = yearSelect.value;
-                const month = String(monthSelect.value).padStart(2, '0');
+        function changeCalendar() {
 
-                window.location.href =
-                    window.location.origin +
-                    window.location.pathname +
-                    '?year=' + encodeURIComponent(year) +
-                    '&month=' + encodeURIComponent(month);
-            }
+            const year = yearSelect.value;
+            const month = String(monthSelect.value).padStart(2, '0');
+
+            const url = new URL(window.location.href);
+
+            // Remove selected day
+            url.searchParams.delete('day');
+
+            // Set new year and month
+            url.searchParams.set('year', year);
+            url.searchParams.set('month', month);
+
+            // IMPORTANT:
+            // Remove any other unwanted query parameters
+            // while keeping only year/month.
+            const newUrl =
+                window.location.pathname +
+                '?year=' + encodeURIComponent(year) +
+                '&month=' + encodeURIComponent(month);
+
+            console.log('Calendar URL:', newUrl);
+
+            window.location.href = newUrl;
+        }
+
+
+        if (yearSelect) {
             yearSelect.addEventListener('change', changeCalendar);
+        }
+
+        if (monthSelect) {
             monthSelect.addEventListener('change', changeCalendar);
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -691,7 +721,6 @@
 
         const calendar =
             document.getElementById('event-calendar');
-
 
         if (!calendar) {
             return;
@@ -703,65 +732,56 @@
         | Day Click
         |--------------------------------------------------------------------------
         |
-        | Clicking a calendar day sends:
+        | Clicking a day:
         |
-        | ?year=2083&month=5&day=15
+        | /?year=2083&month=05&day=10
         |
-        |--------------------------------------------------------------------------
         */
 
-        calendar.querySelectorAll('.calendar-day').forEach(function(dayElement) {
+        calendar
+            .querySelectorAll('.calendar-day')
+            .forEach(function(dayElement) {
 
-            dayElement.addEventListener('click', function() {
+                dayElement.addEventListener('click', function() {
 
-                const date = this.dataset.date;
+                    const date = this.dataset.date;
 
-                if (!date) {
-                    return;
-                }
+                    if (!date) {
+                        return;
+                    }
 
-                const [year, month, day] = date.split('-');
+                    const [year, month, day] = date.split('-');
 
-                const url = new URL(
-                    window.location.href
-                );
+                    // Create URL with year/month/day
+                    const newUrl =
+                        window.location.pathname +
+                        '?year=' + encodeURIComponent(year) +
+                        '&month=' + encodeURIComponent(month) +
+                        '&day=' + encodeURIComponent(day);
 
-                url.searchParams.set('year', year);
-                url.searchParams.set('month', month);
-                url.searchParams.set('day', day);
+                    console.log('Day URL:', newUrl);
 
-                window.location.href = url.toString();
+                    window.location.href = newUrl;
+
+                });
 
             });
-
-        });
 
 
         /*
         |--------------------------------------------------------------------------
-        | Event URL
+        | Event API
         |--------------------------------------------------------------------------
         */
 
         const eventUrl =
             calendar.dataset.eventUrl;
 
-
         if (!eventUrl) {
-
-            console.error(
-                'Event URL is missing.'
-            );
-
+            console.error('Event URL is missing.');
             return;
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Current Calendar Year / Month
-        |--------------------------------------------------------------------------
-        */
 
         const calendarYear =
             {{ $calendar->year }};
@@ -770,31 +790,16 @@
             {{ $calendar->month }};
 
 
-        console.log(
-            'Calendar:',
-            calendarYear,
-            calendarMonth
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Build API URL
-        |--------------------------------------------------------------------------
-        */
-
         const eventRequestUrl =
             new URL(
                 eventUrl,
                 window.location.origin
             );
 
-
         eventRequestUrl.searchParams.set(
             'year',
             calendarYear
         );
-
 
         eventRequestUrl.searchParams.set(
             'month',
@@ -808,15 +813,8 @@
         );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Event List
-        |--------------------------------------------------------------------------
-        */
-
         const eventList =
             document.getElementById('event-list');
-
 
         /*
         |--------------------------------------------------------------------------
