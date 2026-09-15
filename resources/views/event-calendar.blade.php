@@ -670,33 +670,20 @@
         if (yearSelect && monthSelect) {
 
             function changeCalendar() {
-
                 const year = yearSelect.value;
                 const month = monthSelect.value;
 
-                const url = new URL(
-                    window.location.href
-                );
+                const url = new URL(window.location.origin + window.location.pathname);
 
                 url.searchParams.set('year', year);
                 url.searchParams.set('month', month);
 
-                url.searchParams.delete('day');
-
                 window.location.href = url.toString();
             }
 
-            yearSelect.addEventListener(
-                'change',
-                changeCalendar
-            );
-
-            monthSelect.addEventListener(
-                'change',
-                changeCalendar
-            );
+            yearSelect.addEventListener('change', changeCalendar);
+            monthSelect.addEventListener('change', changeCalendar);
         }
-
 
         /*
         |--------------------------------------------------------------------------
