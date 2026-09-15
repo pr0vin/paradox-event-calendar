@@ -274,6 +274,7 @@
     */
 
     .calendar-day {
+        cursor: pointer;
         min-height: 100px;
 
         height: 100%;
@@ -695,7 +696,6 @@
         }
 
 
-
         /*
         |--------------------------------------------------------------------------
         | Calendar
@@ -709,6 +709,45 @@
         if (!calendar) {
             return;
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Day Click
+        |--------------------------------------------------------------------------
+        |
+        | Clicking a calendar day sends:
+        |
+        | ?year=2083&month=5&day=15
+        |
+        |--------------------------------------------------------------------------
+        */
+
+        calendar.querySelectorAll('.calendar-day').forEach(function(dayElement) {
+
+            dayElement.addEventListener('click', function() {
+
+                const date = this.dataset.date;
+
+                if (!date) {
+                    return;
+                }
+
+                const [year, month, day] = date.split('-');
+
+                const url = new URL(
+                    window.location.href
+                );
+
+                url.searchParams.set('year', year);
+                url.searchParams.set('month', month);
+                url.searchParams.set('day', day);
+
+                window.location.href = url.toString();
+
+            });
+
+        });
 
 
         /*
@@ -735,12 +774,6 @@
         |--------------------------------------------------------------------------
         | Current Calendar Year / Month
         |--------------------------------------------------------------------------
-        |
-        | These values come from CalendarBuilder.
-        |
-        | If there is no ?year or ?month in the URL,
-        | EventCalendar already uses the current Nepali date.
-        |
         */
 
         const calendarYear =
@@ -761,11 +794,6 @@
         |--------------------------------------------------------------------------
         | Build API URL
         |--------------------------------------------------------------------------
-        |
-        | Example:
-        |
-        | /calendar/events?year=2083&month=5
-        |
         */
 
         const eventRequestUrl =
@@ -856,11 +884,10 @@
 
 
                     eventList.innerHTML = `
-                <div class="event-error">
-                    Invalid event response.
-                </div>
-            `;
-
+                        <div class="event-error">
+                            Invalid event response.
+                        </div>
+                    `;
 
                     return;
                 }
@@ -884,11 +911,10 @@
                 if (events.length === 0) {
 
                     eventList.innerHTML = `
-                <div class="no-events">
-                    No events found.
-                </div>
-            `;
-
+                        <div class="no-events">
+                            No events found.
+                        </div>
+                    `;
 
                     return;
                 }
@@ -905,39 +931,30 @@
                     const card =
                         document.createElement('div');
 
-
                     card.className =
                         'event-card';
-
 
                     const title =
                         document.createElement('div');
 
-
                     title.className =
                         'event-title';
-
 
                     title.textContent =
                         event.title ?? 'Untitled Event';
 
-
                     const date =
                         document.createElement('div');
-
 
                     date.className =
                         'event-date';
 
-
                     date.textContent =
                         event.date ?? '';
-
 
                     card.appendChild(title);
 
                     card.appendChild(date);
-
 
                     eventList.appendChild(card);
 
@@ -948,17 +965,6 @@
                 |--------------------------------------------------------------------------
                 | Group Events By Date
                 |--------------------------------------------------------------------------
-                |
-                | Example:
-                |
-                | 2083-05-15
-                |
-                | [
-                |     event 1,
-                |     event 2,
-                |     event 3
-                | ]
-                |
                 */
 
                 const eventsByDate = {};
@@ -991,12 +997,6 @@
 
                 Object.keys(eventsByDate).forEach(function(date) {
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Find Calendar Day
-                    |--------------------------------------------------------------------------
-                    */
-
                     const day =
                         calendar.querySelector(
                             '.calendar-day[data-date="' +
@@ -1005,43 +1005,19 @@
                         );
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Event Date Not In Current Calendar
-                    |--------------------------------------------------------------------------
-                    */
-
                     if (!day) {
                         return;
                     }
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Number Of Events
-                    |--------------------------------------------------------------------------
-                    */
-
                     const eventCount =
                         eventsByDate[date].length;
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | No Events
-                    |--------------------------------------------------------------------------
-                    */
 
                     if (eventCount <= 0) {
                         return;
                     }
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Badge
-                    |--------------------------------------------------------------------------
-                    */
 
                     const countElement =
                         day.querySelector(
@@ -1054,23 +1030,11 @@
                     }
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Badge Text
-                    |--------------------------------------------------------------------------
-                    */
-
                     countElement.textContent =
                         eventCount === 1 ?
                         '1 event' :
                         eventCount + ' events';
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Show Badge
-                    |--------------------------------------------------------------------------
-                    */
 
                     countElement.style.display =
                         'inline-flex';
@@ -1095,10 +1059,10 @@
 
 
                 eventList.innerHTML = `
-            <div class="event-error">
-                Failed to load events.
-            </div>
-        `;
+                    <div class="event-error">
+                        Failed to load events.
+                    </div>
+                `;
 
             });
 
