@@ -681,6 +681,8 @@
                 url.searchParams.set('year', year);
                 url.searchParams.set('month', month);
 
+                url.searchParams.delete('day');
+
                 window.location.href = url.toString();
             }
 
