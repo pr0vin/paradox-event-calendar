@@ -673,14 +673,20 @@
                 const year = yearSelect.value;
                 const month = monthSelect.value;
 
-                const url = new URL(window.location.origin + window.location.pathname);
+                // Create completely clean URL
+                const url = new URL(window.location.href);
 
+                // Remove ALL query parameters first
+                url.search = '';
+
+                // Add only year and month
                 url.searchParams.set('year', year);
                 url.searchParams.set('month', month);
 
-                window.location.href = url.toString();
-            }
+                console.log('Changing calendar to:', url.href);
 
+                window.location.href = url.href;
+            }
             yearSelect.addEventListener('change', changeCalendar);
             monthSelect.addEventListener('change', changeCalendar);
         }
