@@ -671,21 +671,13 @@
 
             function changeCalendar() {
                 const year = yearSelect.value;
-                const month = monthSelect.value;
+                const month = String(monthSelect.value).padStart(2, '0');
 
-                // Create completely clean URL
-                const url = new URL(window.location.href);
-
-                // Remove ALL query parameters first
-                url.search = '';
-
-                // Add only year and month
-                url.searchParams.set('year', year);
-                url.searchParams.set('month', month);
-
-                console.log('Changing calendar to:', url.href);
-
-                window.location.href = url.href;
+                window.location.href =
+                    window.location.origin +
+                    window.location.pathname +
+                    '?year=' + encodeURIComponent(year) +
+                    '&month=' + encodeURIComponent(month);
             }
             yearSelect.addEventListener('change', changeCalendar);
             monthSelect.addEventListener('change', changeCalendar);
