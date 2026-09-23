@@ -798,11 +798,11 @@
             null;
 
 
-        console.log('URL parameters:', {
-            year,
-            month,
-            day
-        });
+        // console.log('URL parameters:', {
+        //     year,
+        //     month,
+        //     day
+        // });
 
 
         /*
@@ -1097,16 +1097,16 @@
         }
 
 
-        console.log(
-            'Monthly API:',
-            monthlyEventUrl.toString()
-        );
+        // console.log(
+        //     'Monthly API:',
+        //     monthlyEventUrl.toString()
+        // );
 
 
-        console.log(
-            'Sidebar API:',
-            sidebarEventUrl.toString()
-        );
+        // console.log(
+        //     'Sidebar API:',
+        //     sidebarEventUrl.toString()
+        // );
 
 
         /*
@@ -1150,10 +1150,10 @@
 
                 .then(function(events) {
 
-                    console.log(
-                        'Monthly events:',
-                        events
-                    );
+                    // console.log(
+                    //     'Monthly events:',
+                    //     events
+                    // );
 
 
                     if (!Array.isArray(events)) {
@@ -1244,10 +1244,10 @@
 
                 .then(function(events) {
 
-                    console.log(
-                        'Sidebar events:',
-                        events
-                    );
+                    // console.log(
+                    //     'Sidebar events:',
+                    //     events
+                    // );
 
 
                     if (!Array.isArray(events)) {
