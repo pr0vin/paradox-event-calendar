@@ -393,7 +393,7 @@
     |--------------------------------------------------------------------------
     */
 
-    .event-sidebar {
+    /* .event-sidebar {
         width: 30%;
 
         background: #f8fafc;
@@ -412,6 +412,98 @@
         margin-bottom: 15px;
 
         font-size: 22px;
+    } */
+    /*
+|--------------------------------------------------------------------------
+| Sidebar
+|--------------------------------------------------------------------------
+*/
+
+    .event-sidebar {
+        width: 30%;
+
+        background: #f8fafc;
+
+        padding: 15px;
+
+        border-radius: 8px;
+
+        box-sizing: border-box;
+
+        /*
+    | Make sidebar height match calendar
+    */
+        display: flex;
+        flex-direction: column;
+
+        /*
+    | Important:
+    | Prevent flex child from forcing the sidebar larger.
+    */
+        min-height: 0;
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| Sidebar Heading
+|--------------------------------------------------------------------------
+*/
+
+    .event-sidebar h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+
+        font-size: 22px;
+
+        flex-shrink: 0;
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| Event List
+|--------------------------------------------------------------------------
+|
+| Only this area scrolls.
+|
+*/
+
+    #event-list {
+        overflow-y: auto;
+
+        flex: 1;
+
+        min-height: 0;
+
+        padding-right: 5px;
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| Optional Scrollbar
+|--------------------------------------------------------------------------
+*/
+
+    #event-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #event-list::-webkit-scrollbar-track {
+        background: #e5e7eb;
+
+        border-radius: 10px;
+    }
+
+    #event-list::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+
+        border-radius: 10px;
+    }
+
+    #event-list::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
     }
 
 
@@ -664,63 +756,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+        /*
+        |--------------------------------------------------------------------------
+        | Elements
+        |--------------------------------------------------------------------------
+        */
+
         const yearSelect = document.getElementById('calendar-year');
         const monthSelect = document.getElementById('calendar-month');
+        const calendar = document.getElementById('event-calendar');
+        const eventList = document.getElementById('event-list');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Change Year / Month
-        |--------------------------------------------------------------------------
-        |
-        | Always remove day when changing month or year.
-        |
-        */
-
-        function changeCalendar() {
-
-            const year = yearSelect.value;
-            const month = String(monthSelect.value).padStart(2, '0');
-
-            const url = new URL(window.location.href);
-
-            // Remove selected day
-            url.searchParams.delete('day');
-
-            // Set new year and month
-            url.searchParams.set('year', year);
-            url.searchParams.set('month', month);
-
-            // IMPORTANT:
-            // Remove any other unwanted query parameters
-            // while keeping only year/month.
-            const newUrl =
-                window.location.pathname +
-                '?year=' + encodeURIComponent(year) +
-                '&month=' + encodeURIComponent(month);
-
-            console.log('Calendar URL:', newUrl);
-
-            window.location.href = newUrl;
-        }
-
-
-        if (yearSelect) {
-            yearSelect.addEventListener('change', changeCalendar);
-        }
-
-        if (monthSelect) {
-            monthSelect.addEventListener('change', changeCalendar);
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Calendar
-        |--------------------------------------------------------------------------
-        */
-
-        const calendar =
-            document.getElementById('event-calendar');
 
         if (!calendar) {
             return;
@@ -729,283 +775,649 @@
 
         /*
         |--------------------------------------------------------------------------
-        | Day Click
+        | URL Parameters
+        |--------------------------------------------------------------------------
+        */
+
+        const params = new URLSearchParams(window.location.search);
+
+        const yearParam = params.get('year');
+        const monthParam = params.get('month');
+        const dayParam = params.get('day');
+
+        const year = yearParam ?
+            Number(yearParam) :
+            null;
+
+        const month = monthParam ?
+            Number(monthParam) :
+            null;
+
+        const day = dayParam ?
+            Number(dayParam) :
+            null;
+
+
+        console.log('URL parameters:', {
+            year,
+            month,
+            day
+        });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Change Year / Month
         |--------------------------------------------------------------------------
         |
-        | Clicking a day:
+        | When year or month changes:
         |
-        | /?year=2083&month=05&day=10
+        | ?year=2083&month=05
         |
+        | The selected day is removed.
+        |
+        */
+
+        function changeCalendar() {
+
+            if (!yearSelect || !monthSelect) {
+                return;
+            }
+
+            const selectedYear =
+                Number(yearSelect.value);
+
+            const selectedMonth =
+                Number(monthSelect.value);
+
+
+            if (!selectedYear || !selectedMonth) {
+                return;
+            }
+
+
+            const url =
+                new URL(window.location.href);
+
+
+            /*
+            | Remove all query parameters
+            */
+
+            url.search = '';
+
+
+            /*
+            | Add year
+            */
+
+            url.searchParams.set(
+                'year',
+                selectedYear
+            );
+
+
+            /*
+            | Add month
+            */
+
+            url.searchParams.set(
+                'month',
+                String(selectedMonth).padStart(2, '0')
+            );
+
+
+            /*
+            | Do NOT add day
+            */
+
+
+            window.location.href =
+                url.toString();
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Year Change
+        |--------------------------------------------------------------------------
+        */
+
+        if (yearSelect) {
+
+            yearSelect.addEventListener(
+                'change',
+                changeCalendar
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Month Change
+        |--------------------------------------------------------------------------
+        */
+
+        if (monthSelect) {
+
+            monthSelect.addEventListener(
+                'change',
+                changeCalendar
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Day Click
+        |--------------------------------------------------------------------------
         */
 
         calendar
             .querySelectorAll('.calendar-day')
             .forEach(function(dayElement) {
 
-                dayElement.addEventListener('click', function() {
+                dayElement.addEventListener(
+                    'click',
+                    function() {
 
-                    const date = this.dataset.date;
+                        const date =
+                            this.dataset.date;
 
-                    if (!date) {
-                        return;
+
+                        if (!date) {
+                            return;
+                        }
+
+
+                        const parts =
+                            date.split('-');
+
+
+                        if (parts.length !== 3) {
+                            return;
+                        }
+
+
+                        const selectedYear =
+                            Number(parts[0]);
+
+                        const selectedMonth =
+                            Number(parts[1]);
+
+                        const selectedDay =
+                            Number(parts[2]);
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Create URL
+                        |--------------------------------------------------------------------------
+                        */
+
+                        const url =
+                            new URL(window.location.href);
+
+
+                        /*
+                        | Remove old parameters
+                        */
+
+                        url.search = '';
+
+
+                        /*
+                        | Set selected date
+                        */
+
+                        url.searchParams.set(
+                            'year',
+                            selectedYear
+                        );
+
+                        url.searchParams.set(
+                            'month',
+                            String(selectedMonth).padStart(2, '0')
+                        );
+
+                        url.searchParams.set(
+                            'day',
+                            String(selectedDay).padStart(2, '0')
+                        );
+
+
+                        /*
+                        | Redirect
+                        */
+
+                        window.location.href =
+                            url.toString();
+
                     }
-
-                    const [year, month, day] = date.split('-');
-
-                    // Create URL with year/month/day
-                    const newUrl =
-                        window.location.pathname +
-                        '?year=' + encodeURIComponent(year) +
-                        '&month=' + encodeURIComponent(month) +
-                        '&day=' + encodeURIComponent(day);
-
-                    console.log('Day URL:', newUrl);
-
-                    window.location.href = newUrl;
-
-                });
+                );
 
             });
 
 
         /*
         |--------------------------------------------------------------------------
-        | Event API
+        | Event API URL
         |--------------------------------------------------------------------------
         */
 
         const eventUrl =
             calendar.dataset.eventUrl;
 
+
         if (!eventUrl) {
-            console.error('Event URL is missing.');
+
+            console.error(
+                'Event URL is missing.'
+            );
+
             return;
         }
 
 
-        const calendarYear =
-            {{ $calendar->year }};
+        /*
+        |--------------------------------------------------------------------------
+        | Create Monthly API URL
+        |--------------------------------------------------------------------------
+        |
+        | IMPORTANT:
+        |
+        | This request NEVER contains "day".
+        |
+        | It always gets ALL events for the month.
+        |
+        */
 
-        const calendarMonth =
-            {{ $calendar->month }};
-
-
-        const eventRequestUrl =
+        const monthlyEventUrl =
             new URL(
                 eventUrl,
                 window.location.origin
             );
 
-        eventRequestUrl.searchParams.set(
+
+        monthlyEventUrl.searchParams.set(
             'year',
-            calendarYear
+            year
         );
 
-        eventRequestUrl.searchParams.set(
+
+        monthlyEventUrl.searchParams.set(
             'month',
-            calendarMonth
+            month
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Sidebar API URL
+        |--------------------------------------------------------------------------
+        |
+        | If day exists:
+        |
+        | ?year=2083&month=05&day=25
+        |
+        | Otherwise:
+        |
+        | ?year=2083&month=05
+        |
+        */
+
+        const sidebarEventUrl =
+            new URL(
+                eventUrl,
+                window.location.origin
+            );
+
+
+        sidebarEventUrl.searchParams.set(
+            'year',
+            year
+        );
+
+
+        sidebarEventUrl.searchParams.set(
+            'month',
+            month
+        );
+
+
+        if (day) {
+
+            sidebarEventUrl.searchParams.set(
+                'day',
+                day
+            );
+
+        }
+
+
+        console.log(
+            'Monthly API:',
+            monthlyEventUrl.toString()
         );
 
 
         console.log(
-            'Fetching events:',
-            eventRequestUrl.toString()
+            'Sidebar API:',
+            sidebarEventUrl.toString()
         );
 
 
-        const eventList =
-            document.getElementById('event-list');
-
         /*
         |--------------------------------------------------------------------------
-        | Fetch Events
+        | Fetch Monthly Events
         |--------------------------------------------------------------------------
+        |
+        | This request is ONLY used for:
+        |
+        | - Event counts
+        | - Calendar markers
+        |
         */
 
-        fetch(
-                eventRequestUrl.toString(), {
-                    method: 'GET',
+        function fetchMonthlyEvents() {
 
-                    headers: {
-                        'Accept': 'application/json'
+            return fetch(
+                    monthlyEventUrl.toString(), {
+                        method: 'GET',
+
+                        headers: {
+                            'Accept': 'application/json'
+                        }
                     }
-                }
-            )
+                )
 
-            .then(function(response) {
+                .then(function(response) {
 
-                if (!response.ok) {
+                    if (!response.ok) {
 
-                    throw new Error(
-                        'HTTP error: ' + response.status
-                    );
+                        throw new Error(
+                            'Monthly API HTTP error: ' +
+                            response.status
+                        );
 
-                }
+                    }
 
-                return response.json();
+                    return response.json();
 
-            })
+                })
 
-            .then(function(events) {
+                .then(function(events) {
 
-                console.log(
-                    'Events:',
-                    events
-                );
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Validate Response
-                |--------------------------------------------------------------------------
-                */
-
-                if (!Array.isArray(events)) {
-
-                    console.error(
-                        'Event API must return an array.',
+                    console.log(
+                        'Monthly events:',
                         events
                     );
 
 
-                    eventList.innerHTML = `
-                        <div class="event-error">
-                            Invalid event response.
-                        </div>
-                    `;
+                    if (!Array.isArray(events)) {
 
-                    return;
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Clear Loading
-                |--------------------------------------------------------------------------
-                */
-
-                eventList.innerHTML = '';
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | No Events
-                |--------------------------------------------------------------------------
-                */
-
-                if (events.length === 0) {
-
-                    eventList.innerHTML = `
-                        <div class="no-events">
-                            No events found.
-                        </div>
-                    `;
-
-                    return;
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Sidebar Events
-                |--------------------------------------------------------------------------
-                */
-
-                events.forEach(function(event) {
-
-                    const card =
-                        document.createElement('div');
-
-                    card.className =
-                        'event-card';
-
-                    const title =
-                        document.createElement('div');
-
-                    title.className =
-                        'event-title';
-
-                    title.textContent =
-                        event.title ?? 'Untitled Event';
-
-                    const date =
-                        document.createElement('div');
-
-                    date.className =
-                        'event-date';
-
-                    date.textContent =
-                        event.date ?? '';
-
-                    card.appendChild(title);
-
-                    card.appendChild(date);
-
-                    eventList.appendChild(card);
-
-                });
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Group Events By Date
-                |--------------------------------------------------------------------------
-                */
-
-                const eventsByDate = {};
-
-
-                events.forEach(function(event) {
-
-                    if (!event.date) {
-                        return;
-                    }
-
-
-                    if (!eventsByDate[event.date]) {
-
-                        eventsByDate[event.date] = [];
-
-                    }
-
-
-                    eventsByDate[event.date].push(event);
-
-                });
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Show Event Count On Calendar
-                |--------------------------------------------------------------------------
-                */
-
-                Object.keys(eventsByDate).forEach(function(date) {
-
-                    const day =
-                        calendar.querySelector(
-                            '.calendar-day[data-date="' +
-                            date +
-                            '"]'
+                        throw new Error(
+                            'Monthly event API must return an array.'
                         );
 
+                    }
 
-                    if (!day) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Group Events By Date
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const eventsByDate =
+                        groupEventsByDate(events);
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Show Event Counts
+                    |--------------------------------------------------------------------------
+                    */
+
+                    showEventCounts(eventsByDate);
+
+                });
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fetch Sidebar Events
+        |--------------------------------------------------------------------------
+        |
+        | This request is ONLY used for the sidebar.
+        |
+        */
+
+        function fetchSidebarEvents() {
+
+            if (!eventList) {
+                return;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Loading
+            |--------------------------------------------------------------------------
+            */
+
+            eventList.innerHTML = `
+            <div class="event-loading">
+                Loading events...
+            </div>
+        `;
+
+
+            fetch(
+                    sidebarEventUrl.toString(), {
+                        method: 'GET',
+
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }
+                )
+
+                .then(function(response) {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            'Sidebar API HTTP error: ' +
+                            response.status
+                        );
+
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(function(events) {
+
+                    console.log(
+                        'Sidebar events:',
+                        events
+                    );
+
+
+                    if (!Array.isArray(events)) {
+
+                        throw new Error(
+                            'Sidebar event API must return an array.'
+                        );
+
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Clear
+                    |--------------------------------------------------------------------------
+                    */
+
+                    eventList.innerHTML = '';
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | No Events
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (events.length === 0) {
+
+                        eventList.innerHTML = `
+                    <div class="no-events">
+                        No events found.
+                    </div>
+                `;
+
                         return;
                     }
 
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Render Sidebar
+                    |--------------------------------------------------------------------------
+                    */
+
+                    renderEventList(events);
+
+                })
+
+                .catch(function(error) {
+
+                    console.error(
+                        'Failed to load sidebar events:',
+                        error
+                    );
+
+
+                    eventList.innerHTML = `
+                <div class="event-error">
+                    Failed to load events.
+                </div>
+            `;
+
+                });
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Group Events By Date
+        |--------------------------------------------------------------------------
+        */
+
+        function groupEventsByDate(events) {
+
+            const eventsByDate = {};
+
+
+            events.forEach(function(event) {
+
+                if (!event.date) {
+                    return;
+                }
+
+
+                /*
+                | Normalize date
+                |
+                | 2083-05-07 stays 2083-05-07
+                */
+
+                const date =
+                    String(event.date);
+
+
+                if (!eventsByDate[date]) {
+
+                    eventsByDate[date] = [];
+
+                }
+
+
+                eventsByDate[date].push(event);
+
+            });
+
+
+            return eventsByDate;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Show Event Counts On Calendar
+        |--------------------------------------------------------------------------
+        */
+
+        function showEventCounts(eventsByDate) {
+
+            Object.keys(eventsByDate)
+                .forEach(function(date) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Find calendar day
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const dayElement =
+                        Array.from(
+                            calendar.querySelectorAll(
+                                '.calendar-day'
+                            )
+                        )
+                        .find(function(element) {
+
+                            /*
+                            | Compare normalized dates
+                            */
+
+                            return normalizeDate(
+                                element.dataset.date
+                            ) === normalizeDate(date);
+
+                        });
+
+
+                    if (!dayElement) {
+                        return;
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Count
+                    |--------------------------------------------------------------------------
+                    */
 
                     const eventCount =
                         eventsByDate[date].length;
 
 
-                    if (eventCount <= 0) {
-                        return;
-                    }
-
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Count Element
+                    |--------------------------------------------------------------------------
+                    */
 
                     const countElement =
-                        day.querySelector(
+                        dayElement.querySelector(
                             '.day-event-count'
                         );
 
@@ -1014,6 +1426,12 @@
                         return;
                     }
 
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Display
+                    |--------------------------------------------------------------------------
+                    */
 
                     countElement.textContent =
                         eventCount === 1 ?
@@ -1026,30 +1444,259 @@
 
                 });
 
-            })
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize Date
+        |--------------------------------------------------------------------------
+        |
+        | Makes:
+        |
+        | 2083-05-07
+        | 2083-5-7
+        |
+        | equivalent.
+        |
+        */
+
+        function normalizeDate(date) {
+
+            if (!date) {
+                return '';
+            }
+
+
+            const parts =
+                String(date).split('-');
+
+
+            if (parts.length !== 3) {
+                return String(date);
+            }
+
+
+            const eventYear =
+                Number(parts[0]);
+
+            const eventMonth =
+                Number(parts[1]);
+
+            const eventDay =
+                Number(parts[2]);
+
+
+            return (
+                eventYear +
+                '-' +
+                String(eventMonth).padStart(2, '0') +
+                '-' +
+                String(eventDay).padStart(2, '0')
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Render Sidebar Event List
+        |--------------------------------------------------------------------------
+        */
+
+        function renderEventList(events) {
+
+            if (!eventList) {
+                return;
+            }
+
+
+            events.forEach(function(event) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Card
+                |--------------------------------------------------------------------------
+                */
+
+                const card =
+                    document.createElement('div');
+
+                card.className =
+                    'event-card';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Title
+                |--------------------------------------------------------------------------
+                */
+
+                const title =
+                    document.createElement('div');
+
+                title.className =
+                    'event-title';
+
+                title.textContent =
+                    event.title ||
+                    'Untitled Event';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Date
+                |--------------------------------------------------------------------------
+                */
+
+                const date =
+                    document.createElement('div');
+
+                date.className =
+                    'event-date';
+
+                date.textContent =
+                    event.date || '';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Append
+                |--------------------------------------------------------------------------
+                */
+
+                card.appendChild(title);
+
+                card.appendChild(date);
+
+                eventList.appendChild(card);
+
+            });
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Show Error
+        |--------------------------------------------------------------------------
+        */
+
+        function showError(message) {
+
+            if (!eventList) {
+                return;
+            }
+
+
+            eventList.innerHTML = `
+            <div class="event-error">
+                ${message}
+            </div>
+        `;
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Initial Load
+        |--------------------------------------------------------------------------
+        */
+
+        /*
+        | 1. Always fetch the complete month
+        |    for calendar event counts.
+        */
+
+        fetchMonthlyEvents()
+            .catch(function(error) {
+
+                console.error(
+                    'Failed to load monthly events:',
+                    error
+                );
+
+            });
+
+
+        /*
+        | 2. Fetch sidebar events
+        |
+        | If day exists → selected day's events
+        | If day doesn't exist → month's events
+        */
+
+        fetchSidebarEvents();
+
+
+
+        // sidebar events
+
+        /*
+|--------------------------------------------------------------------------
+| Match Sidebar Height With Calendar
+|--------------------------------------------------------------------------
+*/
+
+        function matchSidebarHeight() {
+
+            const calendarContainer =
+                document.querySelector('.calendar-container');
+
+            const sidebar =
+                document.querySelector('.event-sidebar');
+
+            if (!calendarContainer || !sidebar) {
+                return;
+            }
 
 
             /*
             |--------------------------------------------------------------------------
-            | Error
+            | Mobile
             |--------------------------------------------------------------------------
             */
 
-            .catch(function(error) {
+            if (window.innerWidth <= 768) {
 
-                console.error(
-                    'Failed to load events:',
-                    error
-                );
+                sidebar.style.height = '';
+
+                return;
+            }
 
 
-                eventList.innerHTML = `
-                    <div class="event-error">
-                        Failed to load events.
-                    </div>
-                `;
+            /*
+            |--------------------------------------------------------------------------
+            | Desktop
+            |--------------------------------------------------------------------------
+            */
 
-            });
+            sidebar.style.height =
+                calendarContainer.offsetHeight + 'px';
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Initial
+        |--------------------------------------------------------------------------
+        */
+
+        matchSidebarHeight();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Resize
+        |--------------------------------------------------------------------------
+        */
+
+        window.addEventListener(
+            'resize',
+            matchSidebarHeight
+        );
 
     });
 </script>
