@@ -159,7 +159,7 @@
              Calendar Legend
         ========================================================= --}}
 
-            <div class="calendar-legend">
+            {{-- <div class="calendar-legend">
 
                 <div class="legend-item">
                     <span class="legend-dot meeting"></span>
@@ -181,7 +181,7 @@
                     <span>To-do</span>
                 </div>
 
-            </div>
+            </div> --}}
         </div>
 
 
