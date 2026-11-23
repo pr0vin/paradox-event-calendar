@@ -41,7 +41,8 @@
             @endphp
 
             {{-- Previous --}}
-            <a class="calendar-btn" href="{{ request()->url() }}?year={{ $previousYear }}&month={{ $previousMonth }}">
+            <a class="calendar-btn"
+                href="{{ request()->fullUrlWithQuery(['year' => $previousYear, 'month' => $previousMonth, 'day' => null]) }}">
                 ‹
             </a>
 
@@ -71,7 +72,8 @@
             </div>
 
             {{-- Next --}}
-            <a class="calendar-btn" href="{{ request()->url() }}?year={{ $nextYear }}&month={{ $nextMonth }}">
+            <a class="calendar-btn"
+                href="{{ request()->fullUrlWithQuery(['year' => $nextYear, 'month' => $nextMonth, 'day' => null]) }}">
                 ›
             </a>
 
@@ -111,6 +113,7 @@
                             <td>
 
                                 @if ($day->day)
+                                    {{ $day->weekDay }}
                                     <div class="
                                             calendar-day
                                             @if ($day->today) today @endif
@@ -1004,15 +1007,20 @@
         const monthParam = params.get('month');
         const dayParam = params.get('day');
 
-        const year = yearParam ?
+        // Use the calendar rendered by Laravel as the fallback.
+        // This also safely handles URLs containing year=null or month=null.
+        const renderedYear = Number(@json($calendar->year));
+        const renderedMonth = Number(@json($calendar->month));
+
+        const year = /^\d{4}$/.test(yearParam || '') && Number(yearParam) > 0 ?
             Number(yearParam) :
-            null;
+            renderedYear;
 
-        const month = monthParam ?
+        const month = /^(0?[1-9]|1[0-2])$/.test(monthParam || '') ?
             Number(monthParam) :
-            null;
+            renderedMonth;
 
-        const day = dayParam ?
+        const day = /^(0?[1-9]|[12]\d|3[01])$/.test(dayParam || '') ?
             Number(dayParam) :
             null;
 
@@ -1114,29 +1122,15 @@
             |--------------------------------------------------------------------------
             */
 
-            url.search = '';
+            url.searchParams.delete('day');
+            url.searchParams.set('year', selectedYear);
+            url.searchParams.set('month', String(selectedMonth).padStart(2, '0'));
 
             /*
             |--------------------------------------------------------------------------
-            | Add year
+            | Navigate to selected month
             |--------------------------------------------------------------------------
             */
-
-            url.searchParams.set(
-                'year',
-                selectedYear
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Add month
-            |--------------------------------------------------------------------------
-            */
-
-            url.searchParams.set(
-                'month',
-                String(selectedMonth).padStart(2, '0')
-            );
 
             /*
             |--------------------------------------------------------------------------
@@ -1215,28 +1209,15 @@
                         |--------------------------------------------------------------------------
                         */
 
-                        url.search = '';
+                        url.searchParams.set('year', selectedYear);
+                        url.searchParams.set('month', String(selectedMonth).padStart(2, '0'));
+                        url.searchParams.set('day', String(selectedDay).padStart(2, '0'));
 
                         /*
                         |--------------------------------------------------------------------------
-                        | Set selected date
+                        | Navigate to selected date
                         |--------------------------------------------------------------------------
                         */
-
-                        url.searchParams.set(
-                            'year',
-                            selectedYear
-                        );
-
-                        url.searchParams.set(
-                            'month',
-                            String(selectedMonth).padStart(2, '0')
-                        );
-
-                        url.searchParams.set(
-                            'day',
-                            String(selectedDay).padStart(2, '0')
-                        );
 
                         window.location.href =
                             url.toString();

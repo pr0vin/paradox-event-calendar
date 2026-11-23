@@ -4,6 +4,7 @@ namespace Paradox\EventCalendar\Components;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use InvalidArgumentException;
 use Paradox\EventCalendar\Services\CalendarBuilder;
 use Paradox\NepaliDate\NepaliDate;
 
@@ -24,43 +25,21 @@ class EventCalendar extends Component
     ) {
         $today = $this->nepaliDate->today();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Year
-        |--------------------------------------------------------------------------
-        | Priority:
-        | 1. Component parameter
-        | 2. URL ?year=
-        | 3. Current Nepali year
-        */
+        $requestYear = request('year');
+        $requestMonth = request('month');
 
         $this->year = $year
-            ?? (int) request(
-                'year',
-                $today->year()
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Month
-        |--------------------------------------------------------------------------
-        | Priority:
-        | 1. Component parameter
-        | 2. URL ?month=
-        | 3. Current Nepali month
-        */
+            ?? (is_numeric($requestYear) && (int) $requestYear > 0
+                ? (int) $requestYear
+                : $today->year());
 
         $this->month = $month
-            ?? (int) request(
-                'month',
-                $today->month()
-            );
-
+            ?? (is_numeric($requestMonth) && (int) $requestMonth >= 1 && (int) $requestMonth <= 12
+                ? (int) $requestMonth
+                : $today->month());
 
         $this->eventUrl = $eventUrl;
     }
-
 
     public function render(): View
     {
@@ -69,12 +48,9 @@ class EventCalendar extends Component
             $this->month
         );
 
-        return view(
-            'event-calendar::event-calendar',
-            [
-                'calendar' => $calendar,
-                'eventUrl' => $this->eventUrl,
-            ]
-        );
+        return view('event-calendar::event-calendar', [
+            'calendar' => $calendar,
+            'eventUrl' => $this->eventUrl,
+        ]);
     }
 }
