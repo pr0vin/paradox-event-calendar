@@ -23,6 +23,15 @@
     "nesbot/carbon": "^2.62|^3.0",
     "parad0x/nepali-date": "^1.0"
   },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../paradox-nepali-date",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Paradox\\EventCalendar\\": "src/"
