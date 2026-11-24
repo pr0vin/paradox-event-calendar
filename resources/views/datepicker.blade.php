@@ -1,6 +1,7 @@
 <div class="nepali-datepicker" id="{{ $id }}-datepicker" data-year="{{ $calendar->year }}"
     data-month="{{ $calendar->month }}" data-url="{{ route('event-calendar.datepicker.calendar') }}"
     data-today-year="{{ $today->year() }}" data-today-month="{{ $today->month() }}" data-today-day="{{ $today->day() }}">
+
     {{-- Submitted value --}}
     <input type="hidden" name="{{ $name }}" id="{{ $id }}" value="{{ $value }}"
         @if ($required) required @endif>
@@ -17,15 +18,15 @@
 
     {{-- Calendar --}}
     <div class="np-calendar-popup">
-
         <div class="np-calendar-content">
             @include('event-calendar::datepicker-calendar')
         </div>
-
     </div>
+
 </div>
 
 <style>
+    /* Main wrapper */
     .nepali-datepicker {
         position: relative;
         width: 100%;
@@ -37,9 +38,11 @@
         box-sizing: border-box;
     }
 
+    /* Input */
     .np-input-wrapper {
         display: flex;
         align-items: center;
+        width: 100%;
         border: 1px solid #cbd5e1;
         border-radius: 6px;
         overflow: hidden;
@@ -51,7 +54,7 @@
         min-width: 0;
         border: none;
         outline: none;
-        padding: 10px 12px;
+        padding: 5px;
         cursor: pointer;
         background: transparent;
     }
@@ -65,18 +68,27 @@
         color: #2563eb;
     }
 
+    /* Calendar popup */
     .np-calendar-popup {
         display: none;
         position: absolute;
+
         top: calc(100% + 5px);
         left: 0;
+        right: auto;
+
+        /* Independent calendar width */
         width: 310px;
-        max-width: 100%;
+        min-width: 310px;
+        max-width: calc(100vw - 16px);
+
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
         padding: 12px;
-        z-index: 99999;
+
+        z-index: 999999;
+
         box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
     }
 
@@ -84,6 +96,12 @@
         display: block;
     }
 
+    .np-calendar-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Calendar header */
     .np-calendar-header {
         display: flex;
         justify-content: space-between;
@@ -104,6 +122,7 @@
         cursor: pointer;
     }
 
+    /* Month and year dropdown */
     .np-month-year {
         display: flex;
         align-items: center;
@@ -126,8 +145,10 @@
         cursor: pointer;
     }
 
+    /* Calendar table */
     .np-calendar-table {
         width: 100%;
+        table-layout: fixed;
         border-collapse: collapse;
         text-align: center;
     }
@@ -143,6 +164,7 @@
         height: 38px;
     }
 
+    /* Calendar days */
     .np-day,
     .np-empty {
         display: inline-flex;
@@ -173,6 +195,7 @@
         color: white;
     }
 
+    /* Holidays */
     .np-day.holiday,
     .np-calendar-table th.holiday {
         color: #dc2626;
@@ -182,6 +205,7 @@
         color: white;
     }
 
+    /* Footer */
     .np-calendar-footer {
         display: flex;
         justify-content: space-between;
@@ -198,11 +222,13 @@
         font-size: 13px;
     }
 
+    /* Loading */
     .np-calendar-loading {
         opacity: .5;
         pointer-events: none;
     }
 
+    /* Error */
     .np-calendar-error {
         padding: 10px;
         color: #dc2626;
@@ -244,13 +270,61 @@
                     return toNepaliDigits(date);
                 }
 
+                /*
+                |--------------------------------------------------------------------------
+                | Position calendar popup
+                |--------------------------------------------------------------------------
+                */
+
+                function positionCalendar() {
+
+                    popup.style.left = '0';
+                    popup.style.right = 'auto';
+
+                    const inputRect = datepicker.getBoundingClientRect();
+
+                    const popupWidth = Math.min(
+                        310,
+                        window.innerWidth - 16
+                    );
+
+                    popup.style.width = popupWidth + 'px';
+
+                    // Calculate available space on the right.
+                    const availableRight =
+                        window.innerWidth - inputRect.left;
+
+                    // If calendar overflows right, align to right.
+                    if (availableRight < popupWidth) {
+
+                        popup.style.left = 'auto';
+                        popup.style.right = '0';
+
+                    } else {
+
+                        popup.style.left = '0';
+                        popup.style.right = 'auto';
+
+                    }
+                }
+
                 function openCalendar() {
+
                     popup.classList.add('show');
+
+                    positionCalendar();
                 }
 
                 function closeCalendar() {
+
                     popup.classList.remove('show');
                 }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Load calendar using AJAX
+                |--------------------------------------------------------------------------
+                */
 
                 async function loadCalendar(year, month) {
 
@@ -258,7 +332,10 @@
 
                     content.classList.add('np-calendar-loading');
 
-                    const url = new URL(datepicker.dataset.url, window.location.origin);
+                    const url = new URL(
+                        datepicker.dataset.url,
+                        window.location.origin
+                    );
 
                     url.searchParams.set('year', year);
                     url.searchParams.set('month', month);
@@ -294,6 +371,10 @@
 
                     } catch (error) {
 
+                        if (thisRequest !== requestNumber) {
+                            return;
+                        }
+
                         content.innerHTML =
                             '<div class="np-calendar-error">क्यालेन्डर लोड गर्न सकिएन। पुनः प्रयास गर्नुहोस्।</div>';
 
@@ -306,6 +387,12 @@
                         }
                     }
                 }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Change month
+                |--------------------------------------------------------------------------
+                */
 
                 function changeMonth(offset) {
 
@@ -325,9 +412,16 @@
                     loadCalendar(year, month);
                 }
 
+                /*
+                |--------------------------------------------------------------------------
+                | Select date
+                |--------------------------------------------------------------------------
+                */
+
                 function selectDate(date) {
 
                     hiddenInput.value = date;
+
                     displayInput.value = formatDate(date);
 
                     // Update selected styling.
@@ -350,15 +444,40 @@
                     }));
                 }
 
-                // Open and close.
-                displayInput.addEventListener('click', openCalendar);
+                /*
+                |--------------------------------------------------------------------------
+                | Open and close calendar
+                |--------------------------------------------------------------------------
+                */
 
-                toggleButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    popup.classList.toggle('show');
+                displayInput.addEventListener('click', function() {
+
+                    if (popup.classList.contains('show')) {
+                        closeCalendar();
+                    } else {
+                        openCalendar();
+                    }
+
                 });
 
-                // Handle calendar interactions using event delegation.
+                toggleButton.addEventListener('click', function(event) {
+
+                    event.stopPropagation();
+
+                    if (popup.classList.contains('show')) {
+                        closeCalendar();
+                    } else {
+                        openCalendar();
+                    }
+
+                });
+
+                /*
+                |--------------------------------------------------------------------------
+                | Calendar interactions
+                |--------------------------------------------------------------------------
+                */
+
                 content.addEventListener('click', function(event) {
 
                     const previous = event.target.closest('.np-prev');
@@ -382,6 +501,12 @@
                         return;
                     }
 
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Today button
+                    |--------------------------------------------------------------------------
+                    */
+
                     if (todayButton) {
 
                         const year = parseInt(datepicker.dataset.todayYear, 10);
@@ -394,7 +519,9 @@
                             String(dayNumber).padStart(2, '0');
 
                         if (year !== currentYear || month !== currentMonth) {
+
                             loadCalendar(year, month).then(function() {
+
                                 const today = content.querySelector(
                                     '.np-day[data-date="' + todayDate + '"]'
                                 );
@@ -402,13 +529,23 @@
                                 if (today) {
                                     selectDate(todayDate);
                                 }
+
                             });
+
                         } else {
+
                             selectDate(todayDate);
+
                         }
 
                         return;
                     }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Clear button
+                    |--------------------------------------------------------------------------
+                    */
 
                     if (clearButton) {
 
@@ -424,48 +561,115 @@
                         hiddenInput.dispatchEvent(new Event('change', {
                             bubbles: true
                         }));
+
                     }
+
                 });
 
-                // Month dropdown.
+                /*
+                |--------------------------------------------------------------------------
+                | Month and year dropdown
+                |--------------------------------------------------------------------------
+                */
+
                 content.addEventListener('change', function(event) {
 
                     if (event.target.matches('.np-month-select')) {
+
                         loadCalendar(
                             currentYear,
                             parseInt(event.target.value, 10)
                         );
+
                     }
 
                     if (event.target.matches('.np-year-select')) {
+
                         loadCalendar(
                             parseInt(event.target.value, 10),
                             currentMonth
                         );
+
                     }
+
                 });
 
-                // Close when clicking outside.
+                /*
+                |--------------------------------------------------------------------------
+                | Close when clicking outside
+                |--------------------------------------------------------------------------
+                */
+
                 document.addEventListener('click', function(event) {
+
                     if (!datepicker.contains(event.target)) {
                         closeCalendar();
                     }
+
                 });
 
-                // Close with Escape.
+                /*
+                |--------------------------------------------------------------------------
+                | Close with Escape
+                |--------------------------------------------------------------------------
+                */
+
                 document.addEventListener('keydown', function(event) {
+
                     if (event.key === 'Escape') {
                         closeCalendar();
                     }
+
                 });
+
+                /*
+                |--------------------------------------------------------------------------
+                | Reposition on window resize
+                |--------------------------------------------------------------------------
+                */
+
+                window.addEventListener('resize', function() {
+
+                    if (popup.classList.contains('show')) {
+                        positionCalendar();
+                    }
+
+                });
+
+                /*
+                |--------------------------------------------------------------------------
+                | Reposition on scroll
+                |--------------------------------------------------------------------------
+                */
+
+                window.addEventListener('scroll', function() {
+
+                    if (popup.classList.contains('show')) {
+                        positionCalendar();
+                    }
+
+                }, true);
 
             });
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Initialize
+        |--------------------------------------------------------------------------
+        */
+
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeNepaliDatepickers);
+
+            document.addEventListener(
+                'DOMContentLoaded',
+                initializeNepaliDatepickers
+            );
+
         } else {
+
             initializeNepaliDatepickers();
+
         }
 
     })();
