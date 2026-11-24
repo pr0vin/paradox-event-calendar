@@ -113,7 +113,6 @@
                             <td>
 
                                 @if ($day->day)
-                                    {{ $day->weekDay }}
                                     <div class="
                                             calendar-day
                                             @if ($day->today) today @endif
